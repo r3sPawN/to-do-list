@@ -4,6 +4,8 @@ body {
 
 .to-do-container {
   width: 100%;
+  justify-content: space-evenly;
+  display: flex;
   background-color: grey;
   height: 40px;
   border-bottom: 1px solid black;
