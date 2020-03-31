@@ -9,31 +9,34 @@ class ToDoList extends React.Component {
       { 
        id: 1,
        title: 'Go shoping',
-       taskComplete: 'false'
+       disabled: true
       },
       
       { 
         id: 2,
         title: 'Spam viber',
-        taskComplete: 'false'
+        disabled: true
       },
       
       { 
         id: 3,
         title: 'Take out the trashhh',
-        taskComplete: 'false'
+        disabled: true
       }
-    ]
+    ],
   }
+  
 
   handleDeleteOnClick(event, todoId) {
-    this.setState({todos: this.state.todos.filter( todo => todo.id !== todoId)})
+    const { todos } = this.state;
+    this.setState({todos: todos.filter( todo => todo.id !== todoId)});
   }
 
-  handleAddOnClick(event) {
-    const taskCount = this.state.todos.length;
-    this.state.todos.push({id: taskCount + 1 , title: '', taskComplete: 'false'})
-    this.setState({todos: this.state.todos})
+  handleAddOnClick = (event) => {
+    const {todos} = this.state;
+    const taskCount = todos.length;
+    todos.push({id: taskCount + 1 , title: '', disabled: true});
+    this.setState({todos: todos});
   }
 
   handleChange(event, todoId) {
@@ -46,13 +49,41 @@ class ToDoList extends React.Component {
       }
     })  
   }
+
+  handleEditOnClick(event,todoId) {
+    const {todos} = this.state;
+    todos.forEach(element => { 
+      if(element.id === todoId) {
+        element.disabled = false;
+      }
+    })
+    this.setState({todos: todos})
+  }
   
+  handleOnEnterPress = (event) => {
+  const {todos} = this.state;
+    if(event.key === 'Enter') {
+    todos.forEach(element => { 
+      if(element.disabled === false) {
+          element.disabled = true;
+        }
+    })    
+    this.setState({todos: todos})
+    } 
+  }
+
   render() {
     return (
       <div>
-        <button className="add-new-task" onClick={(event) => this.handleAddOnClick(event)}>Add New Task</button> 
+        <button className="add-new-task" onClick={this.handleAddOnClick}>Add New Task</button> 
         {this.state.todos.map( todo => <div className="to-do-container" key={todo.id}> 
-            <input type="text" value={todo.title} onChange={(event) => this.handleChange(event, todo.id)}/>
+            <button onClick={(event) => this.handleEditOnClick(event,todo.id)}>Edit</button>
+            <input 
+            disabled={todo.disabled} 
+            type="text"
+            onKeyPress={this.handleOnEnterPress} 
+            value={todo.title} 
+            onChange={(event) => this.handleChange(event, todo.id)}/>
             <button onClick={(event) => this.handleDeleteOnClick(event, todo.id)}>Delete</button> 
           </div> ) }
       </div>
