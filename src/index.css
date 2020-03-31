@@ -9,4 +9,9 @@ body {
   background-color: grey;
   height: 40px;
   border-bottom: 1px solid black;
+  align-items: center;
+}
+
+.add-new-task {
+  margin-left: 50%;
 }

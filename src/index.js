@@ -36,18 +36,24 @@ class ToDoList extends React.Component {
     this.setState({todos: this.state.todos})
   }
 
-  handleChange(event) {
-    this.setState({todos: event.target.todos.title});
+  handleChange(event, todoId) {
+    const newList = this.state.todos.slice();
+    
+    newList.forEach(element => {
+      if(element.id === todoId) {
+        element.title = event.target.value;
+        this.setState({newList});  
+      }
+    })  
   }
-
+  
   render() {
     return (
       <div>
-        <button onClick={(event) => this.handleAddOnClick(event)}>Add New Task</button> 
+        <button className="add-new-task" onClick={(event) => this.handleAddOnClick(event)}>Add New Task</button> 
         {this.state.todos.map( todo => <div className="to-do-container" key={todo.id}> 
-            <input type="text" value={todo.title} onChange={ this.handleChange}/>
+            <input type="text" value={todo.title} onChange={(event) => this.handleChange(event, todo.id)}/>
             <button onClick={(event) => this.handleDeleteOnClick(event, todo.id)}>Delete</button> 
-            {/*   <button>Edit</button> */}
           </div> ) }
       </div>
     )
