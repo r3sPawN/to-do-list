@@ -4,6 +4,8 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 class ToDoList extends React.Component {
+  inputRefs = {}
+
   state = {
     todos:[ 
       { 
@@ -35,8 +37,8 @@ class ToDoList extends React.Component {
   handleAddOnClick = (event) => {
     const {todos} = this.state;
     const taskCount = todos.length;
-    todos.push({id: taskCount + 1 , title: '', disabled: true});
-    this.setState({todos: todos});
+    todos.push({id: taskCount + 1 , title: '', disabled: false});
+    this.setState({todos: todos}, () => this.inputRefs[taskCount + 1].focus());
   }
 
   handleChange(event, todoId) {
@@ -57,7 +59,8 @@ class ToDoList extends React.Component {
         element.disabled = false;
       }
     })
-    this.setState({todos: todos})
+    
+   this.setState({todos: todos}, () => this.inputRefs[todoId].focus());
   }
   
   handleOnEnterPress = (event) => {
@@ -76,11 +79,12 @@ class ToDoList extends React.Component {
     return (
       <div>
         <button className="add-new-task" onClick={this.handleAddOnClick}>Add New Task</button> 
-        {this.state.todos.map( todo => <div className="to-do-container" key={todo.id}> 
+        {this.state.todos.map( (todo, index) => <div className="to-do-container" key={todo.id}> 
             <button onClick={(event) => this.handleEditOnClick(event,todo.id)}>Edit</button>
             <input 
             disabled={todo.disabled} 
             type="text"
+            ref={e => this.inputRefs[todo.id]= e}
             onKeyPress={this.handleOnEnterPress} 
             value={todo.title} 
             onChange={(event) => this.handleChange(event, todo.id)}/>
